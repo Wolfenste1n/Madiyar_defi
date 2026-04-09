@@ -1,4 +1,3 @@
-cat > .github/workflows/test.yml << 'EOF'
 name: Smart Contract CI
 
 on:
@@ -52,4 +51,3 @@ jobs:
       - name: Run Slither analysis
         run: slither src/ --exclude-dependencies
         continue-on-error: true
-EOF
