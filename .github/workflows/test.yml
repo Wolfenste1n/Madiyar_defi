@@ -1,0 +1,53 @@
+name: Smart Contract CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Build, Test & Analyze
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Install dependencies
+        run: forge install
+
+      - name: Compile contracts
+        run: forge build --sizes
+
+      - name: Run unit and fuzz tests
+        run: forge test -vv
+
+      - name: Generate gas report
+        run: forge test --gas-report > gas-report.txt
+        continue-on-error: true
+
+      - name: Upload gas report
+        uses: actions/upload-artifact@v3
+        with:
+          name: gas-report
+          path: gas-report.txt
+
+      - name: Run forge coverage
+        run: forge coverage --report summary
+        continue-on-error: true
+
+      - name: Install Slither
+        run: pip install slither-analyzer
+
+      - name: Run Slither analysis
+        run: slither src/ --exclude-dependencies
+        continue-on-error: true
