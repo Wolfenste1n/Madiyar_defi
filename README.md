@@ -100,3 +100,17 @@ Simplified lending protocol with:
 | Fork.t.sol | 4 fork tests |
 | AMM.t.sol | 15 unit + 1 fuzz |
 | LendingPool.t.sol | 11 unit |
+
+
+
+
+## 
+cd Madiyar_defi
+forge install foundry-rs/forge-std
+forge test -vv
+forge test --gas-report
+
+## 
+source /Users/valerysovetov/.zshenv
+foundryup
+forge --version
